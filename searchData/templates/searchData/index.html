@@ -1,0 +1,184 @@
+{% extends 'movies/base.html' %}
+{% load static%}
+
+
+{% block content%}
+<link rel="stylesheet" type="text/css" href="{% static 'searchData/css/style.css'%}">
+<main>
+  <article>
+
+    <!-- 
+      - #MOVIE DETAIL
+    -->
+
+    <section class="movie-detail">
+      <div class="container">
+
+        <figure class="movie-detail-banner">
+
+          <img src="{{postersearch}}" alt="movie">
+
+          <button class="play-btn">
+            <ion-icon name="play-circle-outline"></ion-icon>
+          </button>
+
+        </figure>
+
+        <div class="movie-detail-content">
+
+          <p class="detail-subtitle">Full HD Movie</p>
+
+          <h1 class="h1 detail-title">
+            {{searchedmovie.title}}
+          </h1>
+
+          <div class="meta-wrapper">
+
+            <div class="badge-wrapper">
+              <div class="badge badge-fill">PG 13</div>
+
+              <div class="badge badge-outline">HD</div>
+            </div>
+
+            <div class="ganre-wrapper">
+              <a href="#"> 
+                {% for i  in searchedmovie.genre  %}   
+                {{i}}  
+               {% endfor %}	</a>
+
+             
+            </div>
+
+            <div class="date-time">
+
+              <div>
+                <ion-icon name="calendar-outline"></ion-icon>
+
+                <time datetime="{{searchedmovie.releasedDate}}">
+                  {{searchedmovie.releasedDate}}</time>
+              </div>
+         
+              <div>
+                <ion-icon name="time-outline"></ion-icon>
+
+                <time datetime="PT115M"> {{searchedmovie.duration}}</time>
+              </div>
+              <div class="rating">
+                <ion-icon name="star"></ion-icon>
+
+                <data>{{searchedmovie.rating}}</data>
+              </div>
+            </div>
+       
+
+          </div>
+
+          <p class="storyline">
+            {{searchedmovie.description}}
+          </p>
+           <div class="date-time " style="margin-bottom: 1rem;">
+          <div >
+            <ion-icon name="people"></ion-icon>
+
+              <h5> Director : {{searchedmovie.director}}</h5>
+             
+          </div>
+        </div>
+          <div class="details-actions">
+
+            <button class="share">
+              <ion-icon name="share-social"></ion-icon>
+
+              <span>Share</span>
+            </button>
+
+            <div class="title-wrapper">
+              <p class="title">Prime Video</p>
+
+              <p class="text">Streaming Channels</p>
+            </div>
+             
+            <button class="btn btn-primary"> 
+              <a href="{{trailersearch}}">
+              <ion-icon name="play"></ion-icon>
+
+              <span>Watch Now</span>
+            </a>
+            </button>
+
+          </div>
+
+          <a href="{{trailersearch}}" download class="download-btn">
+            <span>Download</span>
+
+            <ion-icon name="download-outline"></ion-icon>
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+
+
+
+
+    <!-- 
+      - #Recommended Movies Slider 
+    -->
+    <section class="tv-series popularcontainer" id="popularmovies">
+      <div class="container">
+
+        <p class="section-subtitle">Suggestion For You</p>
+
+        <h2 class="h2 section-title">Recommended Moives</h2>
+        <div class="row slick-slider">
+          {% for i,j in data %}
+          <div class="col-md-2 mx-2">
+            <div class="movie-card">
+            
+              <a href="{% url 'movies:details' movie.id %}">
+                <figure class="card-banner">
+                  <img src="{{j}}" alt="movie poster">
+                </figure>
+              </a>
+
+              <div class="title-wrapper">
+                <a href="{% url 'movies:details' movie.id %}">
+                  <h3 class="card-title">{{i}}</h3>
+                </a>
+
+                <time datetime="2022">{{movie.releasedDate}}</time>
+              </div>
+
+              <div class="card-meta">
+                <div class="badge badge-outline">2K</div>
+
+                <div class="duration">
+                  <ion-icon name="time-outline"></ion-icon>
+
+                  <time datetime="PT47M">{{movie.duration}} min</time>
+                </div>
+
+                <div class="rating">
+                  <ion-icon name="star"></ion-icon>
+
+                  <data>{{movie.rating}}</data>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          {% endfor %}	
+         
+          
+        </div>
+          
+
+      </div>
+    </section>
+
+  </article>
+</main>
+
+{% endblock %}

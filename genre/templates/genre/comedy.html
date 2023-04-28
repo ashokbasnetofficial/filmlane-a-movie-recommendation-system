@@ -1,0 +1,64 @@
+{% extends 'movies/base.html' %}
+
+{% load static%}
+
+{% block content%}
+
+
+<!---------------------------------------------- Comedy Movies ------------------------------------------>
+
+<section class="top-rated popularcontainer" id="#topratedmovies">
+  <div class="container">
+
+    <p class="section-subtitle">Latest Movies</p>
+
+    <h2 class="h2 section-title">Comedy Movies</h2>
+
+    <ul class="movies-list">
+      {% for movie,poster in result|slice:"1:49"  %}		
+         
+      <li>
+        <div class="movie-card">
+
+          <a href="{% url 'movies:details' movie.id %}">
+            <figure class="card-banner">
+              <img src="{{poster}}" alt="movie poster">
+            </figure>
+          </a>
+
+          <div class="title-wrapper">
+            <a href="{% url 'movies:details' movie.id %}">
+              <h3 class="card-title">{{movie.title}}</h3>
+            </a>
+
+            <time datetime="2022">{{movie.releasedDate}}</time>
+          </div>
+
+          <div class="card-meta">
+            <div class="badge badge-outline">2K</div>
+
+            <div class="duration">
+              <ion-icon name="time-outline"></ion-icon>
+
+              <time datetime="PT122M">{{movie.duration}} min</time>
+            </div>
+
+            <div class="rating">
+              <ion-icon name="star"></ion-icon>
+
+              <data>{{movie.rating}}</data>
+            </div>
+          </div>
+
+        </div>
+      </li>
+     
+      {% endfor %}
+      
+      </ul>
+    </nav>
+  </div>
+</section>
+		
+
+{% endblock %}

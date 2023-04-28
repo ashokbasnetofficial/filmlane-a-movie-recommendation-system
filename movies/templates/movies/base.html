@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static%}
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filmlane - Best movie collections</title>
+
+
+  <!-- -------------------------------------  links -->
+  <link rel="shortcut icon" href="{% static 'movies/img/homepage images/index.png'%}">
+
+  <!--------------------------------------------- Bootsrap CDN --------------------------------------------------->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+  <!--------------------------------------------- Jquery CDN --------------------------------------------------->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <!--------------------------------------------- Slick  CDN --------------------------------------------------->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+  <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="{% static 'movies/img/favicon.svg'%}" type="image/svg+xml">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="{% static 'movies/css/style.css'%}">
+
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body id="top">
+
+  <!-- 
+    - #HEADER
+  -->
+
+  <header class="header" data-header>
+    <div class="container">
+
+      <div class="overlay" data-overlay></div>
+
+      <a href="{% url 'movies:index'%}" class="logo">
+        <img src="{% static 'movies/img/logo.svg'%}" alt="Filmlane logo">
+      </a>
+
+      <div class="header-actions">
+        <!-- Search Bar -->
+        <form class="d-flex justify-content-center" action="{% url 'movies:search'%}" method="POST">
+          {% csrf_token %}
+          <input list="movies" class="form-control search text-danger" type="search" placeholder="Search Movie..."
+            aria-label="Search" name="searched">
+          <datalist id="movies" class=" bg-danger">
+            {% for movie,poster in result %}
+            <option value="{{movie.title}}">
+            {% endfor %}
+          </datalist>
+          <button class="search-btn" type="submit">
+            <ion-icon name="search-outline"></ion-icon>
+          </button>
+        </form>
+
+        {% if user.is_authenticated %}
+        <div class="user-info">
+         <!-- Example single danger button -->
+         <li class="nav-item dropdown ">
+          <a href="#" class="navbar-link nav-link " id="navbarDropdown" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false"
+            style=
+            "
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            padding: 3px;
+            text-align: center;
+            border: 2px solid white;
+            "
+            >{{ user.username|slice:":2" }}
+          </a>
+          <ul class="dropdown-menu" id="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item text-white" href="#">{{user.username}}</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout'%}">  <ion-icon name="log-out-outline" style="display: inline-block;"></ion-icon>logout</a></li>
+           
+
+          </ul>
+        </li>
+        
+        
+            
+
+       
+        </div>
+        {% else %}
+        <div class="user-info">
+          <a href="{% url 'login' %}"  class="text-white" style="font-size: 1.1rem;"><ion-icon  name="log-in-outline" style="display: inline-block; margin-top: 9px;"></ion-icon> Login</a>
+        </div>
+        {% endif %}
+
+      </div>
+
+      <button class="menu-open-btn" data-menu-open-btn>
+        <ion-icon name="reorder-two"></ion-icon>
+      </button>
+
+      <nav class="navbar" data-navbar>
+
+        <div class="navbar-top">
+
+          <a href="./index.html" class="logo">
+            <img src="{% static 'movies/img/logo.svg'%}" alt="Filmlane logo">
+          </a>
+
+          <button class="menu-close-btn" data-menu-close-btn>
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+
+        </div>
+
+        <ul class="navbar-list">
+
+          <li>
+            <a href="{% url 'movies:index'%}" class="navbar-link">Home</a>
+          </li>
+
+          <li>
+            <a href="#popularmovies" class="navbar-link">Popular Movies</a>
+          </li>
+
+          <li>
+            <a href="#topratedmovies" class="navbar-link">Top Rate Movies</a>
+          </li>
+
+          <li class="nav-item dropdown ">
+            <a href="#" class="navbar-link nav-link dropdown-toggle" id="navbarDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">Browse with gerne</a>
+            <ul class="dropdown-menu" id="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="{% url 'genre:action'%}">Action</a></li>
+              <li><a class="dropdown-item" href="{% url 'genre:comedy'%}">Comedy</a></li>
+              <li><a class="dropdown-item" href="{% url 'genre:drama'%}">Drama</a></li>
+              <li><a class="dropdown-item" href="{% url 'genre:thriller'%}">Thriller</a></li>
+              <li><a class="dropdown-item" href="{% url 'genre:adventure'%}">Adventure</a></li>
+              <li><a class="dropdown-item" href="{% url 'genre:romance'%}">Romance</a></li>
+              <li><a class="dropdown-item" href="{% url 'genre:crime'%}">Crime</a></li>
+              <li><a class="dropdown-item" href="{% url 'genre:sciencefiction'%}">Science Fiction</a></li>
+
+            </ul>
+          </li>
+
+        </ul>
+
+        <ul class="navbar-social-list">
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-twitter"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-facebook"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-pinterest"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-instagram"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-youtube"></ion-icon>
+            </a>
+          </li>
+
+        </ul>
+
+      </nav>
+
+    </div>
+  </header>
+
+  {% block content %}
+
+
+  {% endblock%}
+
+
+
+
+
+
+
+
+
+  <!-- 
+    - #FOOTER
+  -->
+
+  <footer class="footer">
+
+    <div class="footer-top">
+      <div class="container">
+
+        <div class="footer-brand-wrapper">
+
+          <a href="{% url 'movies:index'%}" class="logo">
+            <img src="{% static 'movies/img/logo.svg'%}" alt="Filmlane logo">
+          </a>
+
+          <ul class="footer-list">
+
+            <li>
+              <a href="./index.html" class="footer-link">Home</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Top Rated Movies</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Popular Movies</a>
+            </li>
+          </ul>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="quicklink-wrapper">
+
+          <ul class="quicklink-list">
+
+            <li>
+              <a href="#" class="quicklink-link">Faq</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Help center</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Terms of use</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Privacy</a>
+            </li>
+
+          </ul>
+
+          <ul class="social-list">
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-instagram"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-youtube"></ion-icon>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-tiktok"></ion-icon>
+              </a>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+
+        <p class="copyright">
+          &copy; 2023 <a href="#">Flimlane-A Movie Recommendation System</a>.
+        </p>
+
+        <img src="{% static 'movies/img/footer-bottom-img.png' %}" alt="Online banking companies logo"
+          class="footer-bottom-img">
+
+      </div>
+    </div>
+
+  </footer>
+
+
+
+
+
+  <!-- 
+    - #GO TO TOP
+  -->
+
+  <a href="#top" class="go-top" data-go-top>
+    <ion-icon name="chevron-up"></ion-icon>
+  </a>
+
+
+
+
+
+  <!-- 
+    - custom js link
+  -->
+  <script src="./assets/js/script.js"></script>
+
+  <!-- 
+    - ionicon link
+  -->
+  <script src="{% static 'movies/js/script.js'%}"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+  <script>
+    $('.slick-slider').slick({
+      slidesToShow: 4,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 2000,
+    });
+  </script>
+  <script>
+  //result list throws error when unavilable movie search
+
+  </script>
+</body>
+
+</html>

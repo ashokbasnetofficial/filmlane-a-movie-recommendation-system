@@ -1,0 +1,25 @@
+{% extends 'movies/base.html' %}
+
+{% load crispy_forms_tags %}
+
+
+{%  block content %}
+
+<div class="py-5 my-5 text-center text-white d-flex"></div>
+<h3 class=" text-center text-white"><span style="display: inline-block;">CREATE</span> <strong style="color: #e2d703; display: inline-block;">ACCOUNT</strong></h5>
+   
+<div class="container py-3 my-3 text-white">
+    <form action="{% url 'register' %}"  method="post">
+
+        {% csrf_token %}
+    
+        {{ form | crispy }}
+    
+        <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Register</button>
+    
+    </form>
+   
+</div>
+
+
+{% endblock %}
